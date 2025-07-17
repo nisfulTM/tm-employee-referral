@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from utils.env_values import get_env_value
+from dotenv import load_dotenv, find_dotenv
 
+load_dotenv(find_dotenv(), override=True, verbose=True)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -26,7 +28,6 @@ SECRET_KEY = 'django-insecure-=u1r+r!h!rhya@jd)tqe0makr3dl$@=2yzl24^)p5r+wf3plz+
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -77,11 +78,21 @@ WSGI_APPLICATION = 'job_referral_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.postgres',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
+DATABASES = {
+    "default": {
+        "ENGINE": get_env_value("DATABASE_ENGINE", "django.db.backends.postgresql"),
+        "NAME": get_env_value("DATABASE_NAME", "job-referral-tm"),
+        "USER": get_env_value("DATABASE_USER", "postgres"),
+        "PASSWORD": get_env_value("DATABASE_PASSWORD", "root"),
+        "HOST": get_env_value("DATABASE_HOST", "localhost"),
+        "PORT": get_env_value("DATABASE_PORT", "5432"),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
