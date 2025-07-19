@@ -14,6 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 from helpers.helper import get_token_user_or_none
 from django.contrib.auth import logout
 from apps.referral_app.services.user_services import UserActions
+from apps.referral_app.services.hr_services import HRActions
 
 
 class Login(APIView):
@@ -104,7 +105,7 @@ class Logout(APIView):
 
 
 class SaveReferralInfo(APIView):
-    @swagger_auto_schema(tags=["Referral"],request_body=ReferralSerializer,operation_id='referral-data',operation_description="This API allows employees to save their referral",)
+    @swagger_auto_schema(tags=["Referral - Employee"],request_body=ReferralSerializer,operation_id='referral-data',operation_description="This API allows employees to save their referral",)
     def post(self, request):
         try:
             resume_file  = request.data.get('resume', None)
@@ -134,4 +135,28 @@ class SaveReferralInfo(APIView):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-    
+
+
+class ReferralList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(tags=["Referral - HR"],operation_id='referral-list',operation_description="This API allows to list all resumes which after completion of the referral",)
+    def get(self, request):
+        try:
+            referral_list = HRActions.referral_list(request)
+            return Response(
+                {
+                    "data": referral_list.data,
+                    "message": "Data fetch successful",
+                    "status": True,
+                },
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            return Response(
+                {
+                    "message": "An unexpected error occurred. Please try again later.",
+                    "status": False,
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
