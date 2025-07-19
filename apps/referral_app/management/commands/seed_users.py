@@ -8,11 +8,8 @@ User = get_user_model()
 class Command(BaseCommand):
     help = 'Seed users from a CSV file (without duplicating existing users)'
 
-    def add_arguments(self, parser):
-        parser.add_argument('csv_file', type=str, help='Path to the users.csv file')
-
     def handle(self, *args, **kwargs):
-        csv_file = kwargs['csv_file']
+        csv_file =  'apps/referral_app/files/users.csv'
 
         created, skipped = 0, 0
 

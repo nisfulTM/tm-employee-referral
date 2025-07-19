@@ -44,24 +44,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
 class UserLoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
-        username = attrs.get('username')
+        email = attrs.get('email')
         password = attrs.get('password')
 
-        if username and password:
-            # Try to authenticate with username or email
-            user = authenticate(username=username, password=password)
-            if not user:
-                # Try with email if username auth failed
-                try:
-                    user_obj = User.objects.get(email=username)
-                    user = authenticate(username=user_obj.username, password=password)
-                except User.DoesNotExist:
-                    pass
+        if email and password:
+            user = authenticate(email=email, password=password)
 
             if not user:
                 raise serializers.ValidationError('Invalid credentials')
@@ -71,6 +64,7 @@ class UserLoginSerializer(serializers.Serializer):
             attrs['user'] = user
             return attrs
         raise serializers.ValidationError('Must include username and password')
+
 
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
@@ -84,6 +78,7 @@ class UserSerializer(serializers.ModelSerializer):
     def get_full_name(self, obj):
         return f"{obj.first_name} {obj.last_name}".strip()
 
+
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -94,6 +89,7 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=value).exclude(id=user.id).exists():
             raise serializers.ValidationError("Email already exists")
         return value
+
 
 class PasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
@@ -111,6 +107,7 @@ class PasswordChangeSerializer(serializers.Serializer):
         except serializers.ValidationError as e:
             raise serializers.ValidationError(e.messages)
         return value
+
 
 class EmployeeListSerializer(serializers.ModelSerializer):
     """Serializer for HR to view employee list"""

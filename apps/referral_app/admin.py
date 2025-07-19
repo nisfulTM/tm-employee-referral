@@ -1,31 +1,89 @@
-# apps/referral_app/admin.py
+# -*- coding: utf-8 -*-
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth import get_user_model
 
-User = get_user_model()
+from .models import CustomUser, UserToken, Department, Role, Referral, ReferralStatusLog
 
-class CustomUserAdmin(UserAdmin):
-    # Add 'type' to the fieldsets
-    fieldsets = UserAdmin.fieldsets + (
-        ('User Type', {'fields': ('type',)}),
+
+@admin.register(CustomUser)
+class CustomUserAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'password',
+        'last_login',
+        'is_superuser',
+        'first_name',
+        'last_name',
+        'is_staff',
+        'is_active',
+        'date_joined',
+        'email',
+        'username',
+        'type',
     )
-
-    # Add 'type' to the add form
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ('User Type', {'fields': ('type',)}),
+    list_filter = (
+        'last_login',
+        'is_superuser',
+        'is_staff',
+        'is_active',
+        'date_joined',
     )
+    raw_id_fields = ('groups', 'user_permissions')
 
-    # Display 'type' in the list view
-    list_display = UserAdmin.list_display + ('type',)
-    list_filter = UserAdmin.list_filter + ('type',)
 
-    # Add search by type
-    search_fields = UserAdmin.search_fields + ('type',)
+@admin.register(UserToken)
+class UserTokenAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'user',
+        'refresh_token',
+        'access_token',
+        'created_at',
+        'is_active',
+    )
+    list_filter = ('user', 'created_at', 'is_active')
+    date_hierarchy = 'created_at'
 
-    def get_queryset(self, request):
-        """Optimize queryset for better performance"""
-        return super().get_queryset(request).select_related()
 
-# Register the custom user admin
-admin.site.register(User, CustomUserAdmin)
+@admin.register(Department)
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+    search_fields = ('name',)
+
+
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'department')
+    list_filter = ('department',)
+    search_fields = ('name',)
+
+
+@admin.register(Referral)
+class ReferralAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'referred_by',
+        'fullname',
+        'email',
+        'phone_number',
+        'linkedin_url',
+        'role',
+        'resume',
+        'status',
+        'created_at',
+    )
+    list_filter = ('referred_by', 'role', 'created_at')
+    date_hierarchy = 'created_at'
+
+
+@admin.register(ReferralStatusLog)
+class ReferralStatusLogAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'referral',
+        'updated_by',
+        'old_status',
+        'new_status',
+        'updated_at',
+    )
+    list_filter = ('referral', 'updated_by', 'updated_at')
+    date_hierarchy = 'updated_at'

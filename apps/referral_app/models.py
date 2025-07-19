@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-
+from django.utils import timezone
 
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = [
@@ -11,11 +11,13 @@ class CustomUser(AbstractUser):
         ('hr', 'HR'),
     ]
 
-    type = models.CharField(
-        max_length=20,
-        choices=USER_TYPE_CHOICES,
-        default='employee'
-    )
+    email       = models.EmailField(_('Email'),unique=True, max_length = 255, blank = True, null = True)
+    username    = models.CharField(_('User Name'), max_length = 250, blank = True, null = True)
+    type        = models.CharField(max_length=20,choices=USER_TYPE_CHOICES,default='employee')
+
+    USERNAME_FIELD = 'email'
+
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return f"{self.username} ({self.get_type_display()})"
@@ -29,6 +31,21 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+
+
+class UserToken(models.Model):
+    user            = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_tokens')
+    refresh_token   = models.TextField(_("Refresh Token"), max_length=255,)
+    access_token    = models.TextField(("Access Token"), max_length=255,)
+    created_at      = models.DateTimeField(_("Created At"), max_length=255,auto_now_add=True)
+    is_active       = models.BooleanField(_("Is Active"),default=True)
+    
+    class Meta:
+        db_table = 'user_tokens'
+        
+    def deactivate(self):
+        self.is_active = False
+        self.save()
 
 class Department(models.Model):
     name = models.CharField(_("Department Name"), max_length=255)
@@ -52,6 +69,7 @@ class Role(models.Model):
         verbose_name = _("Role")
         verbose_name_plural = _("Roles")
 
+
 class Referral(models.Model):
     referred_by   = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL,null=True,related_name='referrals_made',verbose_name=_("Referred By"))
     fullname      = models.CharField(_("Full Name"), max_length=20, blank=True, null=True)
@@ -59,7 +77,7 @@ class Referral(models.Model):
     phone_number  = models.CharField(_("Phone Number"), max_length=20, blank=True, null=True)
     linkedin_url  = models.URLField(_("LinkedIn URL"), blank=True, null=True)
     role          = models.ForeignKey('Role', on_delete   = models.SET_NULL, null=True, verbose_name=_("Role"))
-    resume_path   = models.FileField(_("Resume"), upload_to='resumes/', blank=True, null=True)
+    resume        = models.FileField(_("Resume"), upload_to='uploads/resumes/', blank=True, null=True)
     status        = models.CharField(_("Status"), max_length=50)
     created_at    = models.DateTimeField(_("Created At"), auto_now_add=True)
 
@@ -84,4 +102,3 @@ class ReferralStatusLog(models.Model):
     class Meta:
         verbose_name = _("Referral Status Log")
         verbose_name_plural = _("Referral Status Logs")
-
