@@ -5,6 +5,8 @@ import App from "./App";
 import Login from "./pages/Login";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import ReferralForm from "./pages/ReferralForm";
+import AdminPage from "./pages/HRView"; // ✅ Import your new Admin/HR page
+import { Toaster } from "@/components/ui/toaster"; // ✅ Import ShadCN Toaster
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -18,15 +20,28 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/login" element={<Login />} />
 
         {/* Protected Referral Form */}
-        <Route
-          path="/referral-form"
-          element={
-            <ProtectedRoute>
-              <ReferralForm />
-            </ProtectedRoute>
-          }
-        />
+<Route
+  path="/referral-form"
+  element={
+    <ProtectedRoute allowedRoles={["employee"]}>
+      <ReferralForm />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/hr-view"
+  element={
+    <ProtectedRoute allowedRoles={["hr"]}>
+      <AdminPage />
+    </ProtectedRoute>
+  }
+/>
+
       </Routes>
+
+      {/* ✅ ShadCN Toast System */}
+      <Toaster />
     </BrowserRouter>
   </React.StrictMode>
 );

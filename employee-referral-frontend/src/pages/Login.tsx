@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -9,31 +10,33 @@ export default function Login() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (email && password) {
-      localStorage.setItem("authToken", "dummy_token_123");
+    // ✅ Dummy check (Replace with real API later)
+    if (email === "employee@company.com" && password === "123456") {
+      localStorage.setItem("authToken", "dummy_employee_token");
+      localStorage.setItem("role", "employee");
       navigate("/referral-form");
-    } else {
-      alert("Please enter valid credentials!");
+    } 
+    else if (email === "hr@company.com" && password === "123456") {
+      localStorage.setItem("authToken", "dummy_hr_token");
+      localStorage.setItem("role", "hr");
+      navigate("/hr-view");
+    } 
+    else {
+      alert("Invalid credentials!");
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-[470px]  p-6 rounded-xl shadow-2xl bg-white font-[Quicksand]">
+      <div className="w-[470px] p-6 rounded-xl shadow-2xl bg-white font-[Quicksand]">
         {/* Logo */}
         <div className="flex justify-center mb-4">
-          <img
-            src="/images/logo.png"
-            alt="Logo"
-            className="h-24 w-auto object-contain"
-          />
+          <img src="/images/logo.png" alt="Logo" className="h-24 w-auto object-contain" />
         </div>
 
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4">
-          <h1 className="text-center text-2xl font-bold text-gray-800">
-            Login
-          </h1>
+          <h1 className="text-center text-2xl font-bold text-gray-800">Login</h1>
 
           <div>
             <input
@@ -63,10 +66,7 @@ export default function Login() {
           </button>
 
           <p className="text-center text-sm text-gray-600">
-            <a
-              href="#"
-              className="text-blue-900 text-base hover:underline"
-            >
+            <a href="#" className="text-blue-900 text-base hover:underline">
               Forgot your password?
             </a>
           </p>
