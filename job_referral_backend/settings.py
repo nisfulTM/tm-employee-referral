@@ -80,6 +80,8 @@ REST_FRAMEWORK = {
     ),
 }
 
+AUTH_USER_MODEL = 'referral_app.CustomUser'
+
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
