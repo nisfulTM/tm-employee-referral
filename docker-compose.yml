@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: job-referral-tm
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    command: /bin/sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - SWAGGER_DEFAULT_API_URL="http://backend.mapsolve-api.localhost/docs"
+      - SECRET_KEY="django-insecure-qg!p$w3*qt=yj18jn5b^&h-x*%g$j-@-l-33#1!(j13gs*@zj8"
+      - DATABASE_ENGINE="django.db.backends.postgresql"
+      - DATABASE_HOST="db"
+      - DATABASE_NAME="job-referral-tm"
+      - DATABASE_USER="postgres"
+      - DATABASE_PASSWORD="root"
+      - DATABASE_PORT="5432"
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_data:
