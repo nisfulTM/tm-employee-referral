@@ -77,7 +77,7 @@ class Referral(models.Model):
     phone_number  = models.CharField(_("Phone Number"), max_length=20, blank=True, null=True)
     linkedin_url  = models.URLField(_("LinkedIn URL"), blank=True, null=True)
     role          = models.ForeignKey('Role', on_delete   = models.SET_NULL, null=True, verbose_name=_("Role"))
-    resume        = models.FileField(_("Resume"), upload_to='uploads/resumes/', blank=True, null=True)
+    resume        = models.FileField(_("Resume"), upload_to='resumes/', blank=True, null=True)
     status        = models.CharField(_("Status"), max_length=50)
     created_at    = models.DateTimeField(_("Created At"), auto_now_add=True)
 
