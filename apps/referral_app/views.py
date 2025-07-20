@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from apps.referral_app.models import UserToken
 from apps.referral_app.serializers.user_serializer import (
     UserLoginSerializer, 
     UserSerializer,
@@ -15,6 +16,8 @@ from helpers.helper import get_token_user_or_none
 from django.contrib.auth import logout
 from apps.referral_app.services.user_services import UserActions
 from apps.referral_app.services.hr_services import HRActions
+from apps.referral_app.services.department_services import DepartmentActions
+from drf_yasg import openapi
 
 
 class Login(APIView):
@@ -72,7 +75,8 @@ class Logout(APIView):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
             
-            token_instance = user_instance.user_tokens.get()
+
+            token_instance = user_instance.user_tokens.last()
 
             refresh_token = token_instance.refresh_token
             if refresh_token:
@@ -136,6 +140,58 @@ class SaveReferralInfo(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
+
+class DepartmentList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(tags=["Department"],operation_id='department-list',operation_description="This API allows to list all departments",)
+    def get(self, request):
+        try:
+            referral_list = DepartmentActions.department_list(request)
+            return Response(
+                {
+                    "data": referral_list.data,
+                    "message": "Data fetch successful",
+                    "status": True,
+                },
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            return Response(
+                {
+                    "message": "An unexpected error occurred. Please try again later.",
+                    "status": False,
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        
+
+
+class RoleList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    chat_room        = openapi.Parameter('chat_room', openapi.IN_QUERY, type=openapi.TYPE_STRING,description="The Chat Room Name", required=False)
+
+    @swagger_auto_schema(tags=["Department"],operation_id='role-list',operation_description="This API allows to list all roles under a department",)
+    def get(self, request):
+        try:
+            role_list = DepartmentActions.role_list(request)
+            return Response(
+                {
+                    "data": role_list.data,
+                    "message": "Data fetch successful",
+                    "status": True,
+                },
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            return Response(
+                {
+                    "message": "An unexpected error occurred. Please try again later.",
+                    "status": False,
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 class ReferralList(APIView):
     permission_classes = [IsAuthenticated]

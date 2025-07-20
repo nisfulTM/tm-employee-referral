@@ -11,6 +11,9 @@ urlpatterns = [
     path("save-referral-data/", views.SaveReferralInfo.as_view()),
 
     # Referral List for HR
+    path("department-list/", views.DepartmentList.as_view()),
+    path("role-list/", views.RoleList.as_view()),
+
     path("referral-list/", views.ReferralList.as_view()),
 
 
