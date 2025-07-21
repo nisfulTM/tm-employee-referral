@@ -3,16 +3,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from apps.referral_app.models import UserToken
+from apps.referral_app.models import Referral, UserToken
 from apps.referral_app.serializers.user_serializer import (
     UserLoginSerializer, 
     UserSerializer,
 )
 from apps.referral_app.serializers.referral_serializers import (
-    ReferralSerializer
+    ReferralSerializer,
+    ReferralStatusChangeSerializer
 )
 from drf_yasg.utils import swagger_auto_schema
-from helpers.helper import get_token_user_or_none
+from helpers.helper import get_object_or_none, get_token_user_or_none
 from django.contrib.auth import logout
 from apps.referral_app.services.user_services import UserActions
 from apps.referral_app.services.hr_services import HRActions
@@ -127,11 +128,10 @@ class SaveReferralInfo(APIView):
             return Response(
                 {
                 'message': 'Successfully saved referral information',
-                "status": False,
+                "status": True,
             }, status=status.HTTP_200_OK)
             
         except Exception as e:
-            print("e",str(e))
             return Response(
                 {
                     "message": "An unexpected error occurred. Please try again later.",
@@ -166,7 +166,6 @@ class DepartmentList(APIView):
             )
         
 
-
 class RoleList(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -193,6 +192,7 @@ class RoleList(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
+
 class ReferralList(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -209,6 +209,49 @@ class ReferralList(APIView):
                 status=status.HTTP_200_OK,
             )
         except Exception as e:
+            return Response(
+                {
+                    "message": "An unexpected error occurred. Please try again later.",
+                    "status": False,
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+class ReferralStatusChange(APIView):
+    permission_classes = [IsAuthenticated]
+    @swagger_auto_schema(tags=["Referral - HR"],request_body=ReferralStatusChangeSerializer,operation_id='referral-status-change',operation_description="This API allows HR to change the status of the Referral",)
+    def post(self, request):
+        try:
+            referral_instance = get_object_or_none(Referral, id=request.data.get('id', None))
+            if not referral_instance:
+                return Response(
+                    {
+                        "message": "Referral instance is not found",
+                        "status": False,
+                    },
+                 status=status.HTTP_404_NOT_FOUND
+                )
+            
+            serializer = ReferralStatusChangeSerializer(referral_instance,data=request.data,context={'request': request})
+            if not serializer.is_valid():
+                return Response(
+                    {
+                        "errors": serializer.errors,
+                        "status": False,
+                    },
+                 status=status.HTTP_400_BAD_REQUEST
+                )
+            serializer.save()
+                
+            return Response(
+                {
+                'message': 'Successfully update status of  referral information',
+                "status": True,
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            print(str(e),"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
             return Response(
                 {
                     "message": "An unexpected error occurred. Please try again later.",

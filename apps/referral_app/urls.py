@@ -14,6 +14,9 @@ urlpatterns = [
     path("department-list/", views.DepartmentList.as_view()),
     path("role-list/", views.RoleList.as_view()),
 
+    path("referral-status-change/", views.ReferralStatusChange.as_view()),
+
+
     path("referral-list/", views.ReferralList.as_view()),
 
 

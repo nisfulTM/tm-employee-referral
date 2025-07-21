@@ -3,17 +3,16 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
 
 class CustomUser(AbstractUser):
-    USER_TYPE_CHOICES = [
-        ('employee', 'Employee'),
-        ('hr', 'HR'),
-    ]
+    class TypeChoices(models.TextChoices):
+        employee    = "employee", _("Employee")
+        hr          = "hr", _("HR")
 
     email       = models.EmailField(_('Email'),unique=True, max_length = 255, blank = True, null = True)
     username    = models.CharField(_('User Name'), max_length = 250, blank = True, null = True)
-    type        = models.CharField(max_length=20,choices=USER_TYPE_CHOICES,default='employee')
+    type        = models.CharField(max_length=20,choices=TypeChoices.choices,default=TypeChoices.employee)
+    emp_code    = models.CharField(_("Employee Code"),unique=True, max_length = 255, blank = True, null = True)
 
     USERNAME_FIELD = 'email'
 
@@ -47,6 +46,7 @@ class UserToken(models.Model):
         self.is_active = False
         self.save()
 
+
 class Department(models.Model):
     name = models.CharField(_("Department Name"), max_length=255)
 
@@ -71,14 +71,22 @@ class Role(models.Model):
 
 
 class Referral(models.Model):
+    class StatusChoices(models.TextChoices):
+        received    = "received", _("Received")
+        shortlisted = "shortlisted", _("Shortlisted")
+        onhold      = "onhold", _("On-hold")
+        hired       = "hired", _("Hired")
+        rejected    = "rejected", _("Rejected")
+
     referred_by   = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL,null=True,related_name='referrals_made',verbose_name=_("Referred By"))
     fullname      = models.CharField(_("Full Name"), max_length=20, blank=True, null=True)
     email         = models.EmailField(_("Email"), blank=True, null=True)
     phone_number  = models.CharField(_("Phone Number"), max_length=20, blank=True, null=True)
     linkedin_url  = models.URLField(_("LinkedIn URL"), blank=True, null=True)
-    role          = models.ForeignKey('Role', on_delete   = models.SET_NULL, null=True, verbose_name=_("Role"))
+    department    = models.CharField(_("Department"), max_length=20, blank=True, null=True)
+    role          = models.CharField(_("Role"), max_length=20, blank=True, null=True)
     resume        = models.FileField(_("Resume"), upload_to='resumes/', blank=True, null=True)
-    status        = models.CharField(_("Status"), max_length=50)
+    status        = models.CharField(_("Status"), max_length=50,choices=StatusChoices.choices,default=StatusChoices.received)
     created_at    = models.DateTimeField(_("Created At"), auto_now_add=True)
 
     def __str__(self):
@@ -91,6 +99,7 @@ class Referral(models.Model):
 
 class ReferralStatusLog(models.Model):
     referral    = models.ForeignKey(Referral, on_delete=models.CASCADE, related_name='status_logs', verbose_name=_("Referral"))
+    notes       = models.CharField(_("Notes"), max_length=20, blank=True, null=True)
     updated_by  = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, verbose_name=_("Updated By"))
     old_status  = models.CharField(_("Old Status"), max_length=50)
     new_status  = models.CharField(_("New Status"), max_length=50)

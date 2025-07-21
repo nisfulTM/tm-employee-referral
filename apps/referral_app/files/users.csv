@@ -1,3 +1,9 @@
-username,email,first_name,last_name,password,type
-john_doe,john@example.com,John,Doe,password123,employee
-jane_hr,jane@example.com,Jane,HR,securepass456,hr
+username,email,first_name,last_name,password,type,emp_code,is_staff
+suhail,suhail.ts@terrificminds.com,Suhail,TS,Suhail123,employee,TM001,True
+farseen,farseen.basheer@terrificminds.com,Farseen,,Farseen123,employee,TM002,False
+amrita,amrita@terrificminds.com,Amrita,E,Amrita123,hr,TM003,False
+arya,arya.girish@terrificminds.com,Arya,Girish,Arya123,employee,TM004,False
+david,david.mendez@terrificminds.com,David,Mendez,David123,employee,TM005,False
+abhishek,abhishek.panicker@terrificminds.com,Abhishek,Panicker,Abhishek123,employee,TM006,False
+nisful,nisful@terrificminds.com,Nisful,Laila,Nisful123,employee,TM007,False
+sanjay,sanjay.pv@terrificminds.com,sanjay,PV,Sanjay123,employee,TM008,False
