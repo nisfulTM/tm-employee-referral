@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { getUserRole, removeAuthData } from "@/utils/token";
 import {
   Eye, Users, Clock, CheckCircle, TrendingUp, LogOut, Building2, Download
 } from "lucide-react";
@@ -106,6 +107,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("role");
+    removeAuthData();
     toast({
       title: "Logged out successfully",
       description: "You have been signed out.",
@@ -400,11 +402,19 @@ const AdminDashboard = () => {
 
 /* ✅ Main Export */
 const AdminApp = () => {
-  const role = localStorage.getItem("role");
+  const navigate = useNavigate();
+  const role = getUserRole();
+
+  useEffect(() => {
+    if (role !== "hr") {
+      navigate("/login", { replace: true });
+    }
+  }, [role, navigate]);
+
   if (role !== "hr") {
-    window.location.href = "/login";
-    return null;
+    return null; // Render nothing while redirecting
   }
+
   return (
     <AdminLayout>
       <AdminDashboard />

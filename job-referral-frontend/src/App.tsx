@@ -1,5 +1,4 @@
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -12,42 +11,40 @@ import HRView from "./pages/HRView";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route
-          path="/login"
-          element={
-            <AuthCheck>
-              <Login />
-            </AuthCheck>
-          }
-        />
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route
+        path="/login"
+        element={
+          <AuthCheck>
+            <Login />
+          </AuthCheck>
+        }
+      />
 
-        {/* Employee Protected Route */}
-        <Route
-          path="/referral-form"
-          element={
-            // <ProtectedRoute allowedRoles={["employee"]}>
+      {/* Employee Protected Route */}
+      <Route
+        path="/referral-form"
+        element={
+          <ProtectedRoute allowedRoles={["employee"]}>
             <ReferralForm />
-            // </ProtectedRoute>
-          }
-        />
+          </ProtectedRoute>
+        }
+      />
 
-        {/* HR Protected Route */}
-        <Route
-          path="/dashboard"
-          element={
-            // <ProtectedRoute allowedRoles={["hr"]}>
+      {/* HR Protected Route */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["hr"]}>
             <HRView />
-            // </ProtectedRoute>
-          }
-        />
+          </ProtectedRoute>
+        }
+      />
 
-        {/* Fallback Redirect */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
+      {/* Fallback Redirect */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 }
 
