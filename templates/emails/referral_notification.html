@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Referral Notification</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            padding: 30px 40px;
+            text-align: center;
+            color: white;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header .subtitle {
+            margin: 8px 0 0 0;
+            font-size: 16px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .referral-card {
+            background: #fff;
+            border: 2px solid #ff6b35;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .referral-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .candidate-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0 0 5px 0;
+        }
+        
+        .position {
+            font-size: 18px;
+            color: #ff6b35;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+        }
+        
+        .detail-grid {
+            display: table;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .detail-row {
+            display: table-row;
+        }
+        
+        .detail-label {
+            display: table-cell;
+            padding: 8px 20px 8px 0;
+            font-weight: 600;
+            color: #555;
+            width: 140px;
+            vertical-align: top;
+        }
+        
+        .detail-value {
+            display: table-cell;
+            padding: 8px 0;
+            color: #333;
+            vertical-align: top;
+        }
+        
+        .employee-section {
+            background: #fff5f0;
+            border-left: 4px solid #ff6b35;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .employee-section h3 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .resume-yes {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .resume-no {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 25px 40px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .footer p {
+            margin: 0;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+            
+            .header, .content {
+                padding: 25px 20px;
+            }
+            
+            .referral-card {
+                padding: 20px 15px;
+            }
+            
+            .detail-grid {
+                display: block;
+            }
+            
+            .detail-row {
+                display: block;
+                margin-bottom: 10px;
+            }
+            
+            .detail-label, .detail-value {
+                display: block;
+                padding: 2px 0;
+            }
+            
+            .detail-label {
+                width: auto;
+                font-weight: 700;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>🎉 New Referral Received</h1>
+            <p class="subtitle">A team member has submitted a candidate referral</p>
+        </div>
+        
+        <div class="content">
+            <div class="referral-card">
+                <div class="candidate-name">{{ candidate_name }}</div>
+                <div class="position">{{ position }}</div>
+                
+                <div class="detail-grid">
+                    <div class="detail-row">
+                        <div class="detail-label">Department:</div>
+                        <div class="detail-value">{{ department }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Email:</div>
+                        <div class="detail-value">{{ candidate_email|default:"Not provided" }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Phone:</div>
+                        <div class="detail-value">{{ candidate_phone|default:"Not provided" }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Resume:</div>
+                        <div class="detail-value">
+                            {% if resume_attached %}
+                                <span class="status-badge resume-yes">✓ Attached</span>
+                            {% else %}
+                                <span class="status-badge resume-no">✗ Not Attached</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Submitted:</div>
+                        <div class="detail-value">{{ submission_date }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-section">
+                <h3>👤 Referred By</h3>
+                <div class="detail-grid">
+                    <div class="detail-row">
+                        <div class="detail-label">Employee:</div>
+                        <div class="detail-value"><strong>{{ employee_name }}</strong></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Employee ID:</div>
+                        <div class="detail-value">{{ employee_id }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Email:</div>
+                        <div class="detail-value">{{ employee_email }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="{{ dashboard_url }}" class="cta-button">
+                    📋 View Full Details
+                </a>
+            </div>
+            
+            <div style="background: #fff5f0; padding: 15px; border-radius: 8px; border-left: 4px solid #ff6b35; margin-top: 25px;">
+                <p style="margin: 0; color: #666; font-size: 14px;">
+                    <strong>Next Steps:</strong> Review the candidate's profile and resume (if attached). 
+                    Contact the referring employee if you need additional information about the candidate.
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from your HR referral system.</p>
+            <p style="margin-top: 5px;">Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>

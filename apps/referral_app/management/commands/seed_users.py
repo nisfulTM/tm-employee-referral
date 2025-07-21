@@ -29,6 +29,8 @@ class Command(BaseCommand):
                     email=email,
                     first_name=row['first_name'],
                     last_name=row['last_name'],
+                    emp_code=row['emp_code'],
+                    is_staff=row['is_staff'],
                     type=row['type'].lower() if 'type' in row else 'employee',
                 )
                 user.set_password(row['password'])

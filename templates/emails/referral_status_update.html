@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Status Update</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            padding: 30px 40px;
+            text-align: center;
+            color: white;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header .subtitle {
+            margin: 8px 0 0 0;
+            font-size: 16px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        
+        .status-card {
+            background: #fff;
+            border: 2px solid #ff6b35;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            text-align: center;
+        }
+        
+        .status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .status-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .candidate-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0 0 5px 0;
+        }
+        
+        .position {
+            font-size: 16px;
+            color: #666;
+            margin: 0 0 20px 0;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px 0;
+        }
+        
+        /* Status-specific styling */
+        .status-received {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeaa7;
+        }
+        
+        .status-shortlisted {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+        }
+        
+        .status-hired {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f1b0b7;
+        }
+        
+        .status-onhold {
+            background: #e2e3e5;
+            color: #383d41;
+            border: 2px solid #ced4da;
+        }
+        
+        .referral-details {
+            background: #fff5f0;
+            border-left: 4px solid #ff6b35;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .referral-details h3 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .detail-grid {
+            display: table;
+            width: 100%;
+        }
+        
+        .detail-row {
+            display: table-row;
+        }
+        
+        .detail-label {
+            display: table-cell;
+            padding: 8px 20px 8px 0;
+            font-weight: 600;
+            color: #555;
+            width: 140px;
+            vertical-align: top;
+        }
+        
+        .detail-value {
+            display: table-cell;
+            padding: 8px 0;
+            color: #333;
+            vertical-align: top;
+        }
+        
+        .status-message {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .status-message h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .status-message p {
+            margin: 0;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .thank-you-section {
+            background: linear-gradient(135deg, #fff5f0 0%, #fff 100%);
+            border: 1px solid #ff6b35;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .thank-you-section h3 {
+            color: #ff6b35;
+            margin: 0 0 15px 0;
+            font-size: 20px;
+        }
+        
+        .thank-you-section p {
+            color: #666;
+            margin: 0;
+            font-size: 16px;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 25px 40px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .footer p {
+            margin: 0;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+            
+            .header, .content {
+                padding: 25px 20px;
+            }
+            
+            .status-card, .referral-details, .thank-you-section {
+                padding: 20px 15px;
+            }
+            
+            .detail-grid {
+                display: block;
+            }
+            
+            .detail-row {
+                display: block;
+                margin-bottom: 10px;
+            }
+            
+            .detail-label, .detail-value {
+                display: block;
+                padding: 2px 0;
+            }
+            
+            .detail-label {
+                width: auto;
+                font-weight: 700;
+            }
+            
+            .status-icon {
+                font-size: 36px;
+            }
+            
+            .candidate-name {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>📋 Referral Status Update</h1>
+            <p class="subtitle">Your referral has been reviewed</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                Hello <strong>{{ employee_name }}</strong>,
+            </div>
+            
+            <p style="color: #666; margin-bottom: 30px;">
+                We have an update on your referral submission. Here's the current status:
+            </p>
+            
+            <div class="status-card">
+                <span class="status-icon">
+                    {% if new_status == 'hired' %}🎉
+                    {% elif new_status == 'shortlisted' %}✅
+                    {% elif new_status == 'received' %}📨
+                    {% elif new_status == 'rejected' %}❌
+                    {% elif new_status == 'onhold' %}⏸️
+                    {% else %}📝
+                    {% endif %}
+                </span>
+                
+                <div class="candidate-name">{{ candidate_name }}</div>
+                <div class="position">{{ position }} - {{ department }}</div>
+                
+                <div class="status-badge status-{{ new_status|slugify }}">
+                    {{ new_status_display }}
+                </div>
+            </div>
+            
+            <div class="referral-details">
+                <h3>📊 Referral Details</h3>
+                <div class="detail-grid">
+                    <div class="detail-row">
+                        <div class="detail-label">Referral ID:</div>
+                        <div class="detail-value">#{{ referral_id }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Submitted:</div>
+                        <div class="detail-value">{{ submission_date }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Updated:</div>
+                        <div class="detail-value">{{ update_date }}</div>
+                    </div>
+                    {% if updated_by %}
+                    <div class="detail-row">
+                        <div class="detail-label">Updated by:</div>
+                        <div class="detail-value">{{ updated_by }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if status_message %}
+            <div class="status-message">
+                <h4>💬 Additional Notes</h4>
+                <p>{{ status_message }}</p>
+            </div>
+            {% endif %}
+            
+            <!-- Status-specific content -->
+            {% if new_status == 'hired' %}
+                <div style="background: #d4edda; border: 2px solid #c3e6cb; border-radius: 10px; padding: 20px; margin: 25px 0; text-align: center;">
+                    <h3 style="color: #155724; margin: 0 0 10px 0;">🎊 Congratulations!</h3>
+                    <p style="color: #155724; margin: 0; font-size: 16px;">
+                        Your referral has been <strong>hired</strong>! Thank you for bringing excellent talent to our team.
+                        {% if referral_bonus %}You may be eligible for a referral bonus as per company policy.{% endif %}
+                    </p>
+                </div>
+            {% elif new_status == 'shortlisted' %}
+                <div style="background: #d1ecf1; border: 2px solid #bee5eb; border-radius: 10px; padding: 20px; margin: 25px 0; text-align: center;">
+                    <h3 style="color: #0c5460; margin: 0 0 10px 0;">🌟 Great News!</h3>
+                    <p style="color: #0c5460; margin: 0; font-size: 16px;">
+                        Your referral has been <strong>shortlisted</strong> and will proceed to the next round of evaluation.
+                    </p>
+                </div>
+            {% elif new_status == 'received' %}
+                <div style="background: #fff3cd; border: 2px solid #ffeaa7; border-radius: 10px; padding: 20px; margin: 25px 0; text-align: center;">
+                    <h3 style="color: #856404; margin: 0 0 10px 0;">📨 Received</h3>
+                    <p style="color: #856404; margin: 0; font-size: 16px;">
+                        Your referral has been <strong>received</strong> and is under initial review by our HR team.
+                    </p>
+                </div>
+            {% elif new_status == 'rejected' %}
+                <div style="background: #f8d7da; border: 2px solid #f1b0b7; border-radius: 10px; padding: 20px; margin: 25px 0; text-align: center;">
+                    <h3 style="color: #721c24; margin: 0 0 10px 0;">Thank You</h3>
+                    <p style="color: #721c24; margin: 0; font-size: 16px;">
+                        While your referral was not selected for this position, we appreciate your effort in helping us find great talent.
+                        Please continue to refer qualified candidates in the future.
+                    </p>
+                </div>
+            {% elif new_status == 'onhold' %}
+                <div style="background: #e2e3e5; border: 2px solid #ced4da; border-radius: 10px; padding: 20px; margin: 25px 0; text-align: center;">
+                    <h3 style="color: #383d41; margin: 0 0 10px 0;">⏸️ On Hold</h3>
+                    <p style="color: #383d41; margin: 0; font-size: 16px;">
+                        Your referral is currently on hold. We'll notify you of any further updates.
+                    </p>
+                </div>
+            {% endif %}
+            
+            <div style="text-align: center;">
+                <a href="{{ dashboard_url }}" class="cta-button">
+                    🔍 View Referral Details
+                </a>
+            </div>
+            
+            <div class="thank-you-section">
+                <h3>🙏 Thank You for Your Referral</h3>
+                <p>
+                    Your contributions help us build a stronger team. We appreciate your continued support 
+                    in helping us find exceptional talent.
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from your HR referral system.</p>
+            <p style="margin-top: 5px;">Please do not reply to this email. Contact HR for questions.</p>
+        </div>
+    </div>
+</body>
+</html>

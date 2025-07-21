@@ -1,3 +1,4 @@
+from apps.referral_app.services.email_services import EmailActions
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -123,8 +124,9 @@ class SaveReferralInfo(APIView):
                     },
                  status=status.HTTP_400_BAD_REQUEST
                 )
-            serializer.save()
-                
+            instance = serializer.save()
+            email_sent = EmailActions.send_referral_notification(instance)
+
             return Response(
                 {
                 'message': 'Successfully saved referral information',
@@ -242,8 +244,9 @@ class ReferralStatusChange(APIView):
                     },
                  status=status.HTTP_400_BAD_REQUEST
                 )
-            serializer.save()
-                
+            instance = serializer.save()
+            EmailActions.send_status_update_notification(instance, updated_by_user=get_token_user_or_none(request), status_message=serializer.validated_data.get('notes', None))
+
             return Response(
                 {
                 'message': 'Successfully update status of  referral information',
@@ -251,7 +254,6 @@ class ReferralStatusChange(APIView):
             }, status=status.HTTP_200_OK)
             
         except Exception as e:
-            print(str(e),"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
             return Response(
                 {
                     "message": "An unexpected error occurred. Please try again later.",

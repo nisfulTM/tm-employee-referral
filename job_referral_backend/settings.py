@@ -14,6 +14,7 @@ from pathlib import Path
 from utils.env_values import get_env_value
 from dotenv import load_dotenv, find_dotenv
 import os
+from datetime import timedelta
 
 load_dotenv(find_dotenv(), override=True, verbose=True)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'job_referral_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,3 +157,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=14),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+}
+
+EMAIL_BACKEND         = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST            = get_env_value('EMAIL_HOST','smtp.gmail.com' )
+EMAIL_HOST_USER       = get_env_value('EMAIL_HOST_USER','testmailadhd@gmail.com')
+EMAIL_HOST_PASSWORD   = get_env_value('EMAIL_HOST_PASSWORD','test')
+EMAIL_PORT            = get_env_value('EMAIL_PORT',587)
+EMAIL_USE_TLS         = True
+DEFAULT_FROM_EMAIL    = get_env_value('DEFAULT_FROM_EMAIL','testmailadhd@gmail.com')
