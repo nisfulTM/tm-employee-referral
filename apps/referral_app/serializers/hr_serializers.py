@@ -18,3 +18,9 @@ class ReferralListSerializer(serializers.ModelSerializer):
             else:
                 return f"{settings.MEDIA_URL}{obj.resume.name}"
         return None
+
+
+class GroupedReferralSerializer(serializers.Serializer):
+    new = ReferralListSerializer(many=True)
+    active = ReferralListSerializer(many=True) 
+    history = ReferralListSerializer(many=True)

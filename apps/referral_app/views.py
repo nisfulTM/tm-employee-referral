@@ -202,7 +202,7 @@ class ReferralList(APIView):
             referral_list = HRActions.referral_list(request)
             return Response(
                 {
-                    "data": referral_list.data,
+                    "data": referral_list,
                     "message": "Data fetch successful",
                     "status": True,
                 },
