@@ -29,9 +29,21 @@ SECRET_KEY = 'django-insecure-=u1r+r!h!rhya@jd)tqe0makr3dl$@=2yzl24^)p5r+wf3plz+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['tm-referral.localhost','backend.tm-referral.localhost','localhost','127.0.0.1']
 
-# Application definition
+CSRF_TRUSTED_ORIGINS = [
+    'http://tm-referral.localhost',
+    "http://localhost:3000", 
+]
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000", 
+    "http://tm-referral.localhost",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:3000", 
+]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -45,12 +57,14 @@ INSTALLED_APPS = [
     'apps.referral_app',
     'rest_framework_simplejwt',
     'drf_yasg',
+    "corsheaders",
     'django_extensions',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
