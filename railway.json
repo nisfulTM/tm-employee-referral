@@ -10,8 +10,9 @@
     },
     {
       "name": "frontend",
-      "builder": "nixpacks",
-      "rootDirectory": "./job-referral-frontend"
+      "builder": "dockerfile",
+      "dockerfilePath": "./job-referral-frontend/Dockerfile",
+      "dockerContext": "./job-referral-frontend"
     }
   ]
 }
