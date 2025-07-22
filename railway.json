@@ -13,5 +13,5 @@
       "builder": "nixpacks",
       "rootDirectory": "./job-referral-frontend"
     }
-  ],
+  ]
 }
