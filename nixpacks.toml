@@ -1,0 +1,10 @@
+# See https://nixpacks.com/docs/configuration/file for options
+
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "serve -s dist -l $PORT"

@@ -11,15 +11,7 @@
     {
       "name": "frontend",
       "builder": "nixpacks",
-      "buildCommand": "npm install && npm run build",
-      "startCommand": "serve -s dist -l $PORT",
       "rootDirectory": "./job-referral-frontend"
     }
   ],
-  "plugins": [
-    {
-      "name": "postgresql",
-      "version": "13"
-    }
-  ]
 }
