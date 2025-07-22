@@ -1,0 +1,19 @@
+{
+  "user": {
+    "id": 3,
+    "username": "admin",
+    "email": "admin@gmail.com",
+    "first_name": "",
+    "last_name": "",
+    "full_name": "",
+    "type": "employee",
+    "is_active": true,
+    "date_joined": "2025-07-19T12:35:10.615659Z"
+  },
+  "tokens": {
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1MzA4NjIxOCwiaWF0IjoxNzUyOTk5ODE4LCJqdGkiOiIyNGViZDcyZWNhODc0MTE2YTE3OGFmYWY1OGE0MzFkNCIsInVzZXJfaWQiOjN9.pAFydzjemvyh8NDHMLFLfY_MtXqmTSDuzJvFpZDryug",
+    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzMDAwMTE4LCJpYXQiOjE3NTI5OTk4MTgsImp0aSI6IjhjMmMzY2E2NzI5MzQ1OWJiZDU0MDViYjYzOGVmZDk5IiwidXNlcl9pZCI6M30.UQl1CnAzc3brLNxU10iMIDtkX4SIEYb1xnPBOydwBu8"
+  },
+  "dashboard_url": "/employee-dashboard/",
+  "message": "Login successful"
+}

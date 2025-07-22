@@ -1,0 +1,53 @@
+{
+  "data": {
+    "success": true,
+    "message": "Data fetched successfully",
+    "data": {
+      "total": 3,
+      "page": 1,
+      "page_size": 5,
+      "next": null,
+      "previous": null,
+      "items": [
+        {
+          "id": 1,
+          "fullname": "test",
+          "email": "test@example.com",
+          "phone_number": "9713132213",
+          "linkedin_url": null,
+          "resume": "/resumes/73ce2e6234be441ca6c96b7c9f72529b.bin",
+          "status": "",
+          "created_at": "2025-07-19T14:02:34.863700Z",
+          "referred_by": null,
+          "role": null
+        },
+        {
+          "id": 2,
+          "fullname": "test",
+          "email": "test@example.com",
+          "phone_number": "9713132213",
+          "linkedin_url": null,
+          "resume": "/resumes/e378375ae8c64ec681e66f6db2c8f32b.pdf",
+          "status": "",
+          "created_at": "2025-07-19T14:03:47.915819Z",
+          "referred_by": null,
+          "role": null
+        },
+        {
+          "id": 3,
+          "fullname": "test",
+          "email": "test@example.com",
+          "phone_number": "9713132213",
+          "linkedin_url": null,
+          "resume": "/uploads/resumes/ec811a7bb506406e877a63efe0e1f0e0.pdf",
+          "status": "",
+          "created_at": "2025-07-19T16:56:11.083927Z",
+          "referred_by": null,
+          "role": null
+        }
+      ]
+    }
+  },
+  "message": "Data fetch successful",
+  "status": true
+}

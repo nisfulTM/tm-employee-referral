@@ -20,6 +20,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+
+
     
    path('', RedirectView.as_view(url='/swagger'), name='redirect'),
    path('admin/', admin.site.urls),

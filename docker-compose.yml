@@ -1,8 +1,51 @@
 version: '3.8'
 
+networks:
+  traefik-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
 services:
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8082:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - traefik-net
+
+  frontend:
+    image: node:22-alpine
+    container_name: job-referral-frontend
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
+    volumes:
+      - ./job-referral-frontend:/app:delegated
+    environment:
+      - NODE_ENV=development
+      - VITE_APP_ENV=development
+      - VITE_APP_URL=http://tm-referral.localhost
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`tm-referral.localhost`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+    networks:
+      - traefik-net
+
   db:
     image: postgres:15
+    container_name: job-referral-db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
@@ -10,29 +53,36 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
     ports:
-      - "5432:5432"
+      - "5435:5432"
+    networks:
+      - traefik-net
 
   backend:
-    build: .
+    build: 
+      context: ./app-backend
+      dockerfile: Dockerfile
+    container_name: job-referral-backend
     command: /bin/sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/app
+      - ./app-backend:/app
     ports:
       - "8000:8000"
     environment:
       - DEBUG=1
-      - SWAGGER_DEFAULT_API_URL="http://backend.mapsolve-api.localhost/docs"
-      - SECRET_KEY="django-insecure-qg!p$w3*qt=yj18jn5b^&h-x*%g$j-@-l-33#1!(j13gs*@zj8"
-      - DATABASE_ENGINE="django.db.backends.postgresql"
-      - DATABASE_HOST="db"
-      - DATABASE_NAME="job-referral-tm"
-      - DATABASE_USER="postgres"
-      - DATABASE_PASSWORD="root"
-      - DATABASE_PORT="5432"
+      - SWAGGER_DEFAULT_API_URL=http://backend.tm-referral.localhost/docs
+      - SECRET_KEY=django-insecure-qg!p$w3*qt=yj18jn5b^&h-x*%g$j-@-l-33#1!(j13gs*@zj8
+      - DATABASE_ENGINE=django.db.backends.postgresql
+      - DATABASE_HOST=db
+      - DATABASE_NAME=job-referral-tm
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=root
+      - DATABASE_PORT=5432
     depends_on:
       - db
-    stdin_open: true
-    tty: true
-
-volumes:
-  postgres_data:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`backend.tm-referral.localhost`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
+    networks:
+      - traefik-net
