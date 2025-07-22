@@ -1,6 +1,5 @@
-"use client";
-
 import { useForm } from "react-hook-form";
+import type { ControllerRenderProps } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -18,8 +17,18 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { getDepartments, getUserProfile, saveReferral } from "@/services/referral";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  getDepartments,
+  getUserProfile,
+  saveReferral,
+} from "@/services/referral";
 import { logout } from "@/services/auth";
 import {
   ReferralSchema,
@@ -49,7 +58,7 @@ export default function ReferralDashboard() {
       department: "",
       role: "",
       comments: "",
-      resume: undefined,
+      // resume is handled by the schema
     },
   });
 
@@ -87,7 +96,7 @@ export default function ReferralDashboard() {
   };
 
   const onSubmit = async (data: TReferralForm) => {
-    if (!data.resume || !(data.resume instanceof File)) {
+    if (!data.resume) {
       toast({
         title: "Resume is required",
         description: "Please upload the candidate's resume.",
@@ -128,17 +137,25 @@ export default function ReferralDashboard() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <Building2 className="h-8 w-8 text-[#FF5D1D]" />
-              <h1 className="text-xl font-semibold text-gray-900">Employee Referral</h1>
+              <h1 className="text-xl font-semibold text-gray-900">
+                Employee Referral
+              </h1>
             </div>
             <div className="flex items-center space-x-4">
               {isUserLoading ? (
                 <div className="text-sm text-gray-700">Loading...</div>
               ) : (
                 <div className="text-sm text-gray-700">
-                  <span className="font-semibold">{userProfile?.name}</span> ({userProfile?.employeeId})
+                  <span className="font-semibold">{userProfile?.name}</span> (
+                  {userProfile?.employeeId})
                 </div>
               )}
-              <Button variant="outline" size="sm" onClick={handleLogout} className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="flex items-center space-x-2"
+              >
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>
               </Button>
@@ -150,12 +167,19 @@ export default function ReferralDashboard() {
       <div className="max-w-4xl mx-auto mt-8 px-6 py-8">
         <Card className="shadow-sm">
           <CardHeader className="pb-6">
-            <CardTitle className="text-2xl text-gray-900">Submit a Referral</CardTitle>
-            <p className="text-gray-600">Help us find great talent for our team</p>
+            <CardTitle className="text-2xl text-gray-900">
+              Submit a Referral
+            </CardTitle>
+            <p className="text-gray-600">
+              Help us find great talent for our team
+            </p>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium text-gray-900 flex items-center">
                     <Users className="h-5 w-5 mr-2 text-[#FF5D1D]" />
@@ -166,11 +190,21 @@ export default function ReferralDashboard() {
                   <FormField
                     control={form.control}
                     name="refereeName"
-                    render={({ field }) => (
+                    render={({
+                      field,
+                    }: {
+                      field: ControllerRenderProps<
+                        TReferralForm,
+                        "refereeName"
+                      >;
+                    }) => (
                       <FormItem>
                         <Label>Full Name *</Label>
                         <FormControl>
-                          <Input placeholder="Enter candidate's name" {...field} />
+                          <Input
+                            placeholder="Enter candidate's name"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -179,11 +213,22 @@ export default function ReferralDashboard() {
                   <FormField
                     control={form.control}
                     name="refereeEmail"
-                    render={({ field }) => (
+                    render={({
+                      field,
+                    }: {
+                      field: ControllerRenderProps<
+                        TReferralForm,
+                        "refereeEmail"
+                      >;
+                    }) => (
                       <FormItem>
                         <Label>Email Address *</Label>
                         <FormControl>
-                          <Input type="email" placeholder="Enter email address" {...field} />
+                          <Input
+                            type="email"
+                            placeholder="Enter email address"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -194,7 +239,14 @@ export default function ReferralDashboard() {
                   <FormField
                     control={form.control}
                     name="refereePhone"
-                    render={({ field }) => (
+                    render={({
+                      field,
+                    }: {
+                      field: ControllerRenderProps<
+                        TReferralForm,
+                        "refereePhone"
+                      >;
+                    }) => (
                       <FormItem>
                         <Label>Phone Number</Label>
                         <FormControl>
@@ -207,7 +259,14 @@ export default function ReferralDashboard() {
                   <FormField
                     control={form.control}
                     name="refereeLinkedIn"
-                    render={({ field }) => (
+                    render={({
+                      field,
+                    }: {
+                      field: ControllerRenderProps<
+                        TReferralForm,
+                        "refereeLinkedIn"
+                      >;
+                    }) => (
                       <FormItem>
                         <Label>LinkedIn Profile</Label>
                         <FormControl>
@@ -229,19 +288,30 @@ export default function ReferralDashboard() {
                   <FormField
                     control={form.control}
                     name="department"
-                    render={({ field }) => (
+                    render={({
+                      field,
+                    }: {
+                      field: ControllerRenderProps<TReferralForm, "department">;
+                    }) => (
                       <FormItem>
                         <Label>Department *</Label>
-                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={areDepartmentsLoading}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={areDepartmentsLoading}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a department" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {departments && Object.keys(departments).map((dept) => (
-                              <SelectItem key={dept} value={dept}>{dept}</SelectItem>
-                            ))}
+                            {departments &&
+                              Object.keys(departments).map((dept) => (
+                                <SelectItem key={dept} value={dept}>
+                                  {dept}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -251,19 +321,33 @@ export default function ReferralDashboard() {
                   <FormField
                     control={form.control}
                     name="role"
-                    render={({ field }) => (
+                    render={({
+                      field,
+                    }: {
+                      field: ControllerRenderProps<TReferralForm, "role">;
+                    }) => (
                       <FormItem>
                         <Label>Role *</Label>
-                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!selectedDepartment}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={!selectedDepartment}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a role" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {selectedDepartment && departments && departments[selectedDepartment as keyof typeof departments]?.map((role: string) => (
-                              <SelectItem key={role} value={role}>{role}</SelectItem>
-                            ))}
+                            {selectedDepartment &&
+                              departments &&
+                              departments[
+                                selectedDepartment as keyof typeof departments
+                              ]?.map((role: string) => (
+                                <SelectItem key={role} value={role}>
+                                  {role}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -276,7 +360,11 @@ export default function ReferralDashboard() {
                   <FormField
                     control={form.control}
                     name="resume"
-                    render={({ field }) => (
+                    render={({
+                      field,
+                    }: {
+                      field: ControllerRenderProps<TReferralForm, "resume">;
+                    }) => (
                       <FormItem>
                         <Label>Candidate's Resume *</Label>
                         <FormControl>
@@ -287,7 +375,10 @@ export default function ReferralDashboard() {
                               className="hidden"
                               id="resume-upload"
                               onChange={(e) => {
-                                if (e.target.files && e.target.files.length > 0) {
+                                if (
+                                  e.target.files &&
+                                  e.target.files.length > 0
+                                ) {
                                   field.onChange(e.target.files[0]);
                                 }
                               }}
@@ -299,9 +390,14 @@ export default function ReferralDashboard() {
                               <div className="text-center">
                                 <Upload className="w-8 h-8 mx-auto text-gray-400" />
                                 <p className="mt-2 text-sm text-gray-600">
-                                  <span className="font-semibold text-[#FF5D1D]">Click to upload</span> or drag and drop
+                                  <span className="font-semibold text-[#FF5D1D]">
+                                    Click to upload
+                                  </span>{" "}
+                                  or drag and drop
                                 </p>
-                                <p className="text-xs text-gray-500">PDF only</p>
+                                <p className="text-xs text-gray-500">
+                                  PDF only
+                                </p>
                               </div>
                             </label>
                           </div>
@@ -322,11 +418,18 @@ export default function ReferralDashboard() {
                   <FormField
                     control={form.control}
                     name="comments"
-                    render={({ field }) => (
+                    render={({
+                      field,
+                    }: {
+                      field: ControllerRenderProps<TReferralForm, "comments">;
+                    }) => (
                       <FormItem>
                         <Label>Additional Comments</Label>
                         <FormControl>
-                          <Textarea placeholder="Why do you recommend this candidate? (Optional)" {...field} />
+                          <Textarea
+                            placeholder="Why do you recommend this candidate? (Optional)"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

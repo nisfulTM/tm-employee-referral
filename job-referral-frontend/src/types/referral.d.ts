@@ -4,11 +4,11 @@ export const ReferralSchema = z.object({
   refereeName: z.string().min(1, "Full Name is required"),
   refereeEmail: z.string().email("Invalid email address"),
   refereePhone: z.string().optional(),
-  refereeLinkedIn: z.string().url().optional().or(z.literal('')),
+  refereeLinkedIn: z.string().url().optional().or(z.literal("")),
   department: z.string().min(1, "Department is required"),
   role: z.string().min(1, "Role is required"),
   comments: z.string().optional(),
-  resume: z.any().optional(), // For file uploads
+  resume: z.instanceof(File, { message: "Resume is required." }),
 });
 
 export type TReferralForm = z.infer<typeof ReferralSchema>;
@@ -41,6 +41,13 @@ export type TReferralItem = {
   created_at: string;
   referred_by: number;
 };
+
+export type TReferralStatus =
+  | "received"
+  | "shortlisted"
+  | "on_hold"
+  | "rejected"
+  | "hired";
 
 export type TReferralListResponse = {
   data: {
