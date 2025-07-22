@@ -161,7 +161,7 @@ class EmailActions:
                 subject=subject,
                 body=text_content,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                to=["suhail.ts@terrificminds.com"]
+                to=[referring_employee.email]
             )
 
             msg.attach_alternative(html_content, "text/html")
