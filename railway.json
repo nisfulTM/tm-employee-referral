@@ -1,0 +1,25 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "services": [
+    {
+      "name": "backend",
+      "builder": "dockerfile",
+      "dockerfilePath": "./app-backend/Dockerfile",
+      "dockerContext": "./app-backend",
+      "startCommand": "gunicorn job_referral_backend.wsgi:application --bind 0.0.0.0:$PORT"
+    },
+    {
+      "name": "frontend",
+      "builder": "nixpacks",
+      "buildCommand": "npm install && npm run build",
+      "startCommand": "serve -s dist -l $PORT",
+      "rootDirectory": "./job-referral-frontend"
+    }
+  ],
+  "plugins": [
+    {
+      "name": "postgresql",
+      "version": "13"
+    }
+  ]
+}
