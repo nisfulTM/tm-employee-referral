@@ -29,19 +29,19 @@ SECRET_KEY = 'django-insecure-=u1r+r!h!rhya@jd)tqe0makr3dl$@=2yzl24^)p5r+wf3plz+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tm-referral.localhost','backend.tm-referral.localhost','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['tm-referral.localhost','backend.tm-referral.localhost','localhost','127.0.0.1','129.159.224.253']
 
 CSRF_TRUSTED_ORIGINS = [
     'http://tm-referral.localhost',
-    "http://localhost:3000", 
+    "http://localhost:3000",
 ]
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", 
+    "http://localhost:3000",
     "http://tm-referral.localhost",
     "http://127.0.0.1:8000",
-    "http://127.0.0.1:3000", 
+    "http://127.0.0.1:3000",
 ]
 
 
