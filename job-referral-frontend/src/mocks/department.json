@@ -1,0 +1,65 @@
+{
+  "Marketing & Sales": [
+    "Sales Intern",
+    "Sales Executive",
+    "Digital Marketing Associate",
+    "Sales Manager",
+    "Sales Lead"
+  ],
+  "Project Management": [
+    "Junior Project Manager",
+    "Agile Project Manager",
+    "Senior Project Manager",
+    "Project Management Lead"
+  ],
+  "UX": [
+    "UX Intern",
+    "UX Designer",
+    "Senior UX Designer",
+    "UX Design Lead"
+  ],
+  "Frontend": [
+    "Frontend Intern",
+    "Frontend Developer",
+    "Senior Frontend Developer",
+    "Frontend Team Lead",
+    "Frontend Architect"
+  ],
+  "Backend": [
+    "Backend Intern",
+    "Backend Developer",
+    "Senior Backend Developer",
+    "Backend Team Lead",
+    "Backend Architect"
+  ],
+  "DevOps": [
+    "DevOps Engineer",
+    "DevOps Lead",
+    "DevOps Manager"
+  ],
+  "QA": [
+    "QA Intern",
+    "QA Engineer",
+    "Senior QA Engineer",
+    "QA Lead",
+    "Quality Assurance Manager"
+  ],
+  "HR": [
+    "HR Intern",
+    "Recruiter",
+    "HR Executive",
+    "Senior HR Executive",
+    "Talent Acquisition Specialist",
+    "HR Manager",
+    "HR Lead"
+  ],
+  "Finance": [
+    "Finance Intern",
+    "Accountant",
+    "Payroll Specialist",
+    "Financial Analyst",
+    "Senior Financial Analyst",
+    "Finance Manager"
+  ],
+  "Others": []
+}
