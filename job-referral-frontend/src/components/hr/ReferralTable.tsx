@@ -57,14 +57,30 @@ const ReferralTable = ({ referrals, onOpenModal }: ReferralTableProps) => (
 
             {/* ✅ Resume Download */}
             <TableCell>
-              <a
-                href={referral.resume}
-                download
-                className="flex items-center text-blue-600 hover:underline"
-              >
+              <Button
+                variant="link"
+                className="flex items-center text-blue-600 hover:underline p-0"
+                onClick={async () => {
+                 try {
+                  const response = await fetch(referral.resume, { mode: "cors" });
+                  const blob = await response.blob();
+                  const url = window.URL.createObjectURL(blob);
+
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = `${referral.fullname}_Resume.pdf`; // Force download
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  window.URL.revokeObjectURL(url);
+                } catch (error) {
+                  console.error("Download failed", error);
+                } 
+                 }}
+               >
                 <Download className="w-4 h-4 mr-1" />
-                Download
-              </a>
+                 Download
+              </Button>
             </TableCell>
 
             {/* ✅ View Button */}
