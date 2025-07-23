@@ -54,8 +54,33 @@ const UpdateStatusDialog = ({
         <DialogHeader>
           <DialogTitle>Update Status & Notes</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div>
+          <div className="space-y-3 bg-gray-50 p-3 rounded-md border">
+    <div>
+      <Label>Name</Label>
+      <p className="text-sm font-medium text-gray-900">{referral.fullname}</p>
+    </div>
+    <div>
+      <Label>Email</Label>
+      <p className="text-sm text-gray-700">{referral.email}</p>
+    </div>
+    <div>
+      <Label>Phone</Label>
+      <p className="text-sm text-gray-700">{referral.phone_number || "N/A"}</p>
+    </div>
+    <div>
+      <Label>LinkedIn<span> </span></Label>
+      <a
+        href={referral.linkedin_url || "#"}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`text-sm ${
+      referral.linkedin_url ? "text-blue-600 hover:underline" : "text-gray-500 cursor-not-allowed"
+      }`}
+      >
+        {referral.linkedin_url || " Not provided"}
+      </a>
+    </div>
+    <div>
             <Label>Status</Label>
             <Select
               value={status}
