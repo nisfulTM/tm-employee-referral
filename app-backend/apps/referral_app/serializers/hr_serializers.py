@@ -4,7 +4,7 @@ from django.conf import settings
 
 class ReferralListSerializer(serializers.ModelSerializer):
     resume                  = serializers.SerializerMethodField()
-    referred_by_name        = serializers.CharField(source='referred_by.name', read_only=True)
+    referred_by_name        = serializers.CharField(source='referred_by.username', read_only=True)
     referred_by_emp_code    = serializers.CharField(source='referred_by.emp_code', read_only=True)
 
     class Meta:
