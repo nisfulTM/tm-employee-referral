@@ -79,14 +79,14 @@ class Referral(models.Model):
         rejected    = "rejected", _("Rejected")
 
     referred_by   = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL,null=True,related_name='referrals_made',verbose_name=_("Referred By"))
-    fullname      = models.CharField(_("Full Name"), max_length=20, blank=True, null=True)
+    fullname      = models.CharField(_("Full Name"), max_length=300, blank=True, null=True)
     email         = models.EmailField(_("Email"), blank=True, null=True)
     phone_number  = models.CharField(_("Phone Number"), max_length=20, blank=True, null=True)
     linkedin_url  = models.URLField(_("LinkedIn URL"), blank=True, null=True)
-    department    = models.CharField(_("Department"), max_length=20, blank=True, null=True)
-    role          = models.CharField(_("Role"), max_length=20, blank=True, null=True)
+    department    = models.CharField(_("Department"), max_length=300, blank=True, null=True)
+    role          = models.CharField(_("Role"), max_length=300, blank=True, null=True)
     resume        = models.FileField(_("Resume"), upload_to='resumes/', blank=True, null=True)
-    status        = models.CharField(_("Status"), max_length=50,choices=StatusChoices.choices,default=StatusChoices.received)
+    status        = models.CharField(_("Status"), max_length=300,choices=StatusChoices.choices,default=StatusChoices.received)
     created_at    = models.DateTimeField(_("Created At"), auto_now_add=True)
 
     def __str__(self):

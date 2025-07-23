@@ -35,3 +35,6 @@ Make sure you have Docker and Docker Compose installed on your system.
 
 1. Frontend URL - http://tm-referral.localhost
 2. Backend URL - 
+
+To open a shell inside the backend container:
+docker compose run backend sh
