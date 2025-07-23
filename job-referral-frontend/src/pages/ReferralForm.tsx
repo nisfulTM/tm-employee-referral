@@ -1,8 +1,6 @@
 import { useForm } from "react-hook-form";
-import type { ControllerRenderProps } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { LogOut, Users, CheckCircle, Building2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Form,
   FormControl,
@@ -24,25 +23,17 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  getUserProfile,
-  saveReferral,
-} from "@/services/referral";
-import { logout } from "@/services/auth";
+import { saveReferral } from "@/services/referral";
 import {
   ReferralSchema,
   type TReferralForm,
   type TSaveReferralPayload,
 } from "@/types/referral.d";
 
-
 import departmentsData from "@/mocks/department.json";
 type Departments = Record<string, string[]>;
 
 const departments: Departments = departmentsData as Departments;
-
-
-
 
 const toBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -53,8 +44,8 @@ const toBase64 = (file: File): Promise<string> =>
   });
 
 export default function ReferralDashboard() {
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, logout } = useAuth();
 
   const form = useForm<TReferralForm>({
     resolver: zodResolver(ReferralSchema),
@@ -67,11 +58,6 @@ export default function ReferralDashboard() {
       role: "",
       comments: "",
     },
-  });
-
-  const { data: userProfile, isLoading: isUserLoading } = useQuery({
-    queryKey: ["userProfile"],
-    queryFn: getUserProfile,
   });
 
   const { mutate: submit, isPending } = useMutation({
@@ -91,13 +77,6 @@ export default function ReferralDashboard() {
       });
     },
   });
-
-const handleLogout = async () => {
-  await logout();
-  navigate("/login", { replace: true });
-};
-
-
 
   const onSubmit = async (data: TReferralForm) => {
     if (!data.resume) {
@@ -146,18 +125,14 @@ const handleLogout = async () => {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
-              {isUserLoading ? (
-                <div className="text-sm text-gray-700">Loading...</div>
-              ) : (
-                <div className="text-sm text-gray-700">
-                  <span className="font-semibold">{userProfile?.name}</span> (
-                  {userProfile?.employeeId})
-                </div>
-              )}
+              <div className="text-sm text-gray-700">
+                <span className="font-semibold">{user.name}</span> (
+                {user.employeeId})
+              </div>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleLogout}
+                onClick={logout}
                 className="flex items-center space-x-2"
               >
                 <LogOut className="w-4 h-4" />
@@ -180,7 +155,10 @@ const handleLogout = async () => {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium text-gray-900 flex items-center">
                     <Users className="h-5 w-5 mr-2 text-[#FF5D1D]" />
@@ -191,11 +169,14 @@ const handleLogout = async () => {
                   <FormField
                     control={form.control}
                     name="refereeName"
-                    render={({ field }: { field: ControllerRenderProps<TReferralForm, "refereeName"> }) => (
+                    render={({ field }) => (
                       <FormItem>
                         <Label>Full Name *</Label>
                         <FormControl>
-                          <Input placeholder="Enter candidate's name" {...field} />
+                          <Input
+                            placeholder="Enter candidate's name"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -204,11 +185,15 @@ const handleLogout = async () => {
                   <FormField
                     control={form.control}
                     name="refereeEmail"
-                    render={({ field }: { field: ControllerRenderProps<TReferralForm, "refereeEmail"> }) => (
+                    render={({ field }) => (
                       <FormItem>
                         <Label>Email Address *</Label>
                         <FormControl>
-                          <Input type="email" placeholder="Enter email address" {...field} />
+                          <Input
+                            type="email"
+                            placeholder="Enter email address"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -219,7 +204,7 @@ const handleLogout = async () => {
                   <FormField
                     control={form.control}
                     name="refereePhone"
-                    render={({ field }: { field: ControllerRenderProps<TReferralForm, "refereePhone"> }) => (
+                    render={({ field }) => (
                       <FormItem>
                         <Label>Phone Number</Label>
                         <FormControl>
@@ -232,7 +217,7 @@ const handleLogout = async () => {
                   <FormField
                     control={form.control}
                     name="refereeLinkedIn"
-                    render={({ field }: { field: ControllerRenderProps<TReferralForm, "refereeLinkedIn"> }) => (
+                    render={({ field }) => (
                       <FormItem>
                         <Label>LinkedIn Profile</Label>
                         <FormControl>
@@ -251,90 +236,94 @@ const handleLogout = async () => {
                   </h3>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="department"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Label>Department *</Label>
+                        <Select
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            if (!departments[value]?.length) {
+                              form.setValue("role", "");
+                            }
+                          }}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a department" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.keys(departments).map((deptKey) => (
+                              <SelectItem key={deptKey} value={deptKey}>
+                                {deptKey}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Label>Role *</Label>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">                          
-<FormField
-  control={form.control}
-  name="department"
-  render={({ field }) => (
-    <FormItem>
-      <Label>Department *</Label>
-      <Select
-        onValueChange={(value) => {
-          field.onChange(value);
-          if (!departments[value]?.length) {
-            form.setValue("role", ""); 
-          }
-        }}
-        defaultValue={field.value}
-      >
-        <FormControl>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a department" />
-          </SelectTrigger>
-        </FormControl>
-        <SelectContent>
-          {Object.keys(departments).map((deptKey) => (
-            <SelectItem key={deptKey} value={deptKey}>
-              {deptKey}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-<FormField
-  control={form.control}
-  name="role"
-  render={({ field }) => (
-    <FormItem>
-      <Label>Role *</Label>
+                        {!selectedDepartment ? (
+                          <FormControl>
+                            <Input
+                              placeholder="Select a department first"
+                              disabled
+                            />
+                          </FormControl>
+                        ) : departments[selectedDepartment]?.length > 0 ? (
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a role" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {departments[selectedDepartment].map(
+                                (role: string) => (
+                                  <SelectItem key={role} value={role}>
+                                    {role}
+                                  </SelectItem>
+                                )
+                              )}
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <FormControl>
+                            <Input
+                              placeholder="Enter role manually"
+                              value={field.value}
+                              onChange={(e) => field.onChange(e.target.value)}
+                            />
+                          </FormControl>
+                        )}
 
-      {!selectedDepartment ? (
-        <FormControl>
-          <Input
-            placeholder="Select a department first"
-            disabled
-          />
-        </FormControl>
-      ) : departments[selectedDepartment]?.length > 0 ? (
-        <Select onValueChange={field.onChange} value={field.value}>
-          <FormControl>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a role" />
-            </SelectTrigger>
-          </FormControl>
-          <SelectContent>
-            {departments[selectedDepartment].map((role: string) => (
-              <SelectItem key={role} value={role}>
-                {role}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      ) : (
-        <FormControl>
-          <Input
-            placeholder="Enter role manually"
-            value={field.value}
-            onChange={(e) => field.onChange(e.target.value)}
-          />
-        </FormControl>
-      )}
-
-      <FormMessage />
-    </FormItem>
-  )}
-/>          
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <FormField
                     control={form.control}
                     name="resume"
-                    render={({ field }: { field: ControllerRenderProps<TReferralForm, "resume"> }) => (
+                    render={({ field }) => (
                       <FormItem>
                         <Label>Candidate's Resume *</Label>
                         <FormControl>
@@ -345,7 +334,10 @@ const handleLogout = async () => {
                               className="hidden"
                               id="resume-upload"
                               onChange={(e) => {
-                                if (e.target.files && e.target.files.length > 0) {
+                                if (
+                                  e.target.files &&
+                                  e.target.files.length > 0
+                                ) {
                                   field.onChange(e.target.files[0]);
                                 }
                               }}
@@ -357,10 +349,14 @@ const handleLogout = async () => {
                               <div className="text-center">
                                 <Upload className="w-8 h-8 mx-auto text-gray-400" />
                                 <p className="mt-2 text-sm text-gray-600">
-                                  <span className="font-semibold text-[#FF5D1D]">Click to upload</span>{" "}
+                                  <span className="font-semibold text-[#FF5D1D]">
+                                    Click to upload
+                                  </span>{" "}
                                   or drag and drop
                                 </p>
-                                <p className="text-xs text-gray-500">PDF only</p>
+                                <p className="text-xs text-gray-500">
+                                  PDF only
+                                </p>
                               </div>
                             </label>
                           </div>
@@ -381,7 +377,7 @@ const handleLogout = async () => {
                   <FormField
                     control={form.control}
                     name="comments"
-                    render={({ field }: { field: ControllerRenderProps<TReferralForm, "comments"> }) => (
+                    render={({ field }) => (
                       <FormItem>
                         <Label>Additional Comments</Label>
                         <FormControl>

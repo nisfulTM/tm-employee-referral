@@ -4,16 +4,20 @@ import type { TTokens, TUser } from "@/types/auth.d";
 const ACCESS_TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";
 const USER_ROLE_KEY = "user_role";
+const USER_NAME_KEY = "first_name";
+const USER_EMPLOYEE_ID_KEY = "user_employee_id";
 
 /**
- * Saves the authentication tokens and user role to cookies.
- * @param tokens - The access and refresh tokens.
- * @param role - The user's role.
+ * Saves the authentication data to cookies and local storage.
+ * @param data - The authentication data including tokens and user info.
  */
-export const saveAuthData = (tokens: TTokens, role: TUser["type"]): void => {
+export const saveAuthData = (data: { user: TUser; tokens: TTokens }): void => {
+  const { user, tokens } = data;
   setCookie(ACCESS_TOKEN_KEY, tokens.access, 7);
-  setCookie(REFRESH_TOKEN_KEY, tokens.refresh, 30); // Refresh token has a longer expiry
-  setCookie(USER_ROLE_KEY, role, 7);
+  setCookie(REFRESH_TOKEN_KEY, tokens.refresh, 30);
+  setCookie(USER_ROLE_KEY, user.type, 7);
+  localStorage.setItem(USER_NAME_KEY, user.first_name);
+  localStorage.setItem(USER_EMPLOYEE_ID_KEY, user.employee_id);
 };
 
 /**
@@ -41,10 +45,28 @@ export const getUserRole = (): string | null => {
 };
 
 /**
- * Removes the authentication tokens and user role from cookies.
+ * Retrieves the user's name from local storage.
+ * @returns The user's name, or null if not found.
+ */
+export const getUserName = (): string | null => {
+  return localStorage.getItem(USER_NAME_KEY);
+};
+
+/**
+ * Retrieves the user's employee ID from local storage.
+ * @returns The user's employee ID, or null if not found.
+ */
+export const getUserEmployeeId = (): string | null => {
+  return localStorage.getItem(USER_EMPLOYEE_ID_KEY);
+};
+
+/**
+ * Removes all authentication data from cookies and local storage.
  */
 export const removeAuthData = (): void => {
   eraseCookie(ACCESS_TOKEN_KEY);
   eraseCookie(REFRESH_TOKEN_KEY);
   eraseCookie(USER_ROLE_KEY);
+  localStorage.removeItem(USER_NAME_KEY);
+  localStorage.removeItem(USER_EMPLOYEE_ID_KEY);
 };

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/services/auth";
+import { saveAuthData } from "@/utils/token";
 import { LoginSchema, type TLogin } from "@/types/auth.d";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +32,7 @@ export default function Login() {
   const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      saveAuthData(data);
       const { user } = data;
       if (user.type === "employee") {
         navigate("/referral-form");
