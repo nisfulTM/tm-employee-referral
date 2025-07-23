@@ -13,10 +13,14 @@ export const login = async (credentials: TLogin): Promise<TLoginResponse> => {
   return data;
 };
 
-/**
- * Logs out the current user by calling the logout endpoint and removing tokens.
- */
+
+ 
 export const logout = async () => {
-  await api.post("/logout/");
-  removeAuthData();
+  removeAuthData(); // ✅ Immediately remove tokens to log out locally
+
+  try {
+    await api.post("/logout/"); // ✅ Backend logout (optional)
+  } catch (error) {
+    console.warn("Logout API failed, but tokens are cleared:", error);
+  }
 };
