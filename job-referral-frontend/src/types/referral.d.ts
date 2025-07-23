@@ -6,7 +6,14 @@ const ACCEPTED_FILE_TYPES = ["application/pdf"];
 export const ReferralSchema = z.object({
   refereeName: z.string().min(1, "Full Name is required"),
   refereeEmail: z.string().email("Invalid email address"),
-  refereePhone: z.string().optional(),
+  refereePhone: z
+    .string()
+    .regex(
+      /^(?:(?:\+|0{0,2})91(\s*[-]\s*)?|[0]?)?[6-9]\d{9}$/,
+      "Invalid phone number"
+    )
+    .optional()
+    .or(z.literal("")),
   refereeLinkedIn: z.string().url().optional().or(z.literal("")),
   department: z.string().min(1, "Department is required"),
   role: z.string().min(1, "Role is required"),
@@ -14,7 +21,10 @@ export const ReferralSchema = z.object({
   resume: z
     .instanceof(File)
     .optional()
-    .refine((file) => !file || file.size <= MAX_FILE_SIZE, 'Max file size is 5MB.')
+    .refine(
+      (file) => !file || file.size <= MAX_FILE_SIZE,
+      "Max file size is 5MB."
+    )
     .refine(
       (file) => !file || ACCEPTED_FILE_TYPES.includes(file.type),
       "Only .pdf files are accepted."

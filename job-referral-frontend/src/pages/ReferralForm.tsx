@@ -431,6 +431,9 @@ export default function ReferralDashboard() {
                                     <p className="text-xs text-gray-500">
                                       PDF only
                                     </p>
+                                    <p className="text-xs text-black mt-1">
+                                      Max Size: 5 MB
+                                    </p>
                                   </div>
                                 )}
                               </div>
