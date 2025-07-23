@@ -26,7 +26,12 @@ class ReferralSerializer(serializers.ModelSerializer):
         instance.role           = validated_data.get('role', None)
         instance.linkedin_url   = validated_data.get('linkedin_url', None)
         instance.referred_by    = get_token_user_or_none(request)
-        instance.resume.save(resume.name, resume, save=False)
+        if resume:
+            ext = resume.name.split('.')[-1]
+            clean_name = instance.fullname.replace(" ", "_").lower() if instance.fullname else "resume"
+            filename = f"{clean_name}_resume.{ext}"
+            instance.resume.save(filename, resume, save=False)
+
         instance.save()
 
         return instance
