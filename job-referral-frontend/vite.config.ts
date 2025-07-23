@@ -15,6 +15,12 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    strictPort: true,
+    cors: true,
+    hmr: {
+      clientPort: 3000,
+      host: "0.0.0.0",
+    },
   },
   plugins: [react()],
   resolve: {
