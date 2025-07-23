@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { LogOut, Users, CheckCircle, Building2, Upload } from "lucide-react";
+import { LogOut, Users, CheckCircle, Building2, Upload, FileText, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -43,7 +44,11 @@ const toBase64 = (file: File): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_FILE_TYPES = ["application/pdf"];
+
 export default function ReferralDashboard() {
+  const [isDragging, setIsDragging] = useState(false);
   const { toast } = useToast();
   const { user, logout } = useAuth();
 
@@ -59,6 +64,35 @@ export default function ReferralDashboard() {
       comments: "",
     },
   });
+
+  const handleFileChange = (file: File | undefined) => {
+    if (!file) {
+      form.setValue("resume", undefined, { shouldValidate: true });
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      toast({
+        title: "File is too large",
+        description: "Please upload a file smaller than 5MB.",
+        variant: "destructive",
+      });
+      form.setValue("resume", undefined, { shouldValidate: true });
+      return;
+    }
+
+    if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
+      toast({
+        title: "Invalid file type",
+        description: "Only PDF files are allowed.",
+        variant: "destructive",
+      });
+      form.setValue("resume", undefined, { shouldValidate: true });
+      return;
+    }
+
+    form.setValue("resume", file, { shouldValidate: true });
+  };
 
   const { mutate: submit, isPending } = useMutation({
     mutationFn: saveReferral,
@@ -334,40 +368,77 @@ export default function ReferralDashboard() {
                               className="hidden"
                               id="resume-upload"
                               onChange={(e) => {
-                                if (
-                                  e.target.files &&
-                                  e.target.files.length > 0
-                                ) {
-                                  field.onChange(e.target.files[0]);
-                                }
+                                handleFileChange(e.target.files?.[0]);
                               }}
                             />
                             <label
                               htmlFor="resume-upload"
-                              className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed rounded-lg cursor-pointer hover:border-gray-400"
+                              className={`flex items-center justify-center w-full px-4 py-6 border-2 border-dashed rounded-lg cursor-pointer hover:border-gray-400 transition-colors duration-200 ease-in-out ${
+                                isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
+                              }`}
+                              onDragEnter={(e) => {
+                                e.preventDefault();
+                                setIsDragging(true);
+                              }}
+                              onDragLeave={(e) => {
+                                e.preventDefault();
+                                setIsDragging(false);
+                              }}
+                              onDragOver={(e) => {
+                                e.preventDefault();
+                              }}
+                              onDrop={(e) => {
+                                e.preventDefault();
+                                setIsDragging(false);
+                                handleFileChange(e.dataTransfer.files?.[0]);
+                              }}
                             >
-                              <div className="text-center">
-                                <Upload className="w-8 h-8 mx-auto text-gray-400" />
-                                <p className="mt-2 text-sm text-gray-600">
-                                  <span className="font-semibold text-[#FF5D1D]">
-                                    Click to upload
-                                  </span>{" "}
-                                  or drag and drop
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                  PDF only
-                                </p>
+                              <div>
+                                {field.value ? (
+                                  <div className="text-center">
+                                    <FileText className="w-10 h-10 mx-auto text-green-500" />
+                                    <div className="flex items-center justify-center gap-2 mt-2">
+                                      <p className="font-medium text-gray-700 truncate max-w-xs">
+                                        {(field.value as File).name}
+                                      </p>
+                                      <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6 p-0 rounded-full shrink-0"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          form.setValue('resume', undefined, { shouldValidate: true });
+                                        }}
+                                      >
+                                        <XCircle className="h-5 w-5 text-red-700" />
+                                      </Button>
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                      Click dropzone to change file.
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <div className="text-center">
+                                    <Upload className="w-8 h-8 mx-auto text-gray-400" />
+                                    <p className="mt-2 text-sm text-gray-600">
+                                      <span className="font-semibold text-[#FF5D1D]">
+                                        Click to upload
+                                      </span>{" "}
+                                      or drag and drop
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                      PDF only
+                                    </p>
+                                  </div>
+                                )}
                               </div>
                             </label>
                           </div>
                         </FormControl>
                         <FormMessage />
-                        {field.value && (
-                          <div className="mt-2 flex items-center text-sm text-green-600">
-                            <CheckCircle className="h-4 w-4 mr-1" />
-                            <span>{(field.value as File).name}</span>
-                          </div>
-                        )}
+                        
                       </FormItem>
                     )}
                   />

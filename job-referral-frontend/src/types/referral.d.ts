@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_FILE_TYPES = ["application/pdf"];
+
 export const ReferralSchema = z.object({
   refereeName: z.string().min(1, "Full Name is required"),
   refereeEmail: z.string().email("Invalid email address"),
@@ -8,7 +11,14 @@ export const ReferralSchema = z.object({
   department: z.string().min(1, "Department is required"),
   role: z.string().min(1, "Role is required"),
   comments: z.string().optional(),
-  resume: z.instanceof(File, { message: "Resume is required." }),
+  resume: z
+    .instanceof(File)
+    .optional()
+    .refine((file) => !file || file.size <= MAX_FILE_SIZE, 'Max file size is 5MB.')
+    .refine(
+      (file) => !file || ACCEPTED_FILE_TYPES.includes(file.type),
+      "Only .pdf files are accepted."
+    ),
 });
 
 export type TReferralForm = z.infer<typeof ReferralSchema>;
