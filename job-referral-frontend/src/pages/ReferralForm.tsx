@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -92,10 +92,12 @@ export default function ReferralDashboard() {
     },
   });
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+const handleLogout = async () => {
+  await logout();
+  navigate("/login", { replace: true });
+};
+
+
 
   const onSubmit = async (data: TReferralForm) => {
     if (!data.resume) {
