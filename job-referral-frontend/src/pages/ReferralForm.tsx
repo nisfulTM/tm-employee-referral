@@ -205,7 +205,7 @@ export default function ReferralDashboard() {
                     name="refereeName"
                     render={({ field }) => (
                       <FormItem>
-                        <Label>Full Name *</Label>
+                        <Label>Full Name <span className="text-red-500">*</span></Label>
                         <FormControl>
                           <Input
                             placeholder="Enter candidate's name"
@@ -221,7 +221,7 @@ export default function ReferralDashboard() {
                     name="refereeEmail"
                     render={({ field }) => (
                       <FormItem>
-                        <Label>Email Address *</Label>
+                        <Label>Email Address <span className="text-red-500">*</span></Label>
                         <FormControl>
                           <Input
                             type="email"
@@ -240,9 +240,9 @@ export default function ReferralDashboard() {
                     name="refereePhone"
                     render={({ field }) => (
                       <FormItem>
-                        <Label>Phone Number</Label>
+                        <Label>Phone Number <span className="text-red-500">*</span></Label>
                         <FormControl>
-                          <Input placeholder="(Optional)" {...field} />
+                          <Input placeholder="Enter candidate's phone  number" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -276,7 +276,7 @@ export default function ReferralDashboard() {
                     name="department"
                     render={({ field }) => (
                       <FormItem>
-                        <Label>Department *</Label>
+                        <Label>Department <span className="text-red-500">*</span></Label>
                         <Select
                           onValueChange={(value) => {
                             field.onChange(value);
@@ -308,7 +308,7 @@ export default function ReferralDashboard() {
                     name="role"
                     render={({ field }) => (
                       <FormItem>
-                        <Label>Role *</Label>
+                        <Label>Role <span className="text-red-500">*</span></Label>
 
                         {!selectedDepartment ? (
                           <FormControl>
@@ -359,7 +359,7 @@ export default function ReferralDashboard() {
                     name="resume"
                     render={({ field }) => (
                       <FormItem>
-                        <Label>Candidate's Resume *</Label>
+                        <Label>Candidate's Resume <span className="text-red-500">*</span></Label>
                         <FormControl>
                           <div className="relative">
                             <Input
