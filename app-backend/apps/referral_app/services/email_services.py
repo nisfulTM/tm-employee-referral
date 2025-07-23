@@ -17,6 +17,7 @@ class EmailActions:
         Send referral notification email after submission
         """
         try:
+            referring_employee = referral.referred_by
             hr_emails = CustomUser.objects.filter(
                 Q(is_active=True) & Q(type=CustomUser.TypeChoices.hr) 
             ).values_list('email', flat=True)
@@ -51,7 +52,7 @@ class EmailActions:
                 View details: {context['dashboard_url']}
                         """.strip()
             
-            subject = f"New Referral: {referral.fullname} for {context['position']}"
+            subject = f"New Referral by {referring_employee.get_full_name()} for the position of {context['position']}"
             
             msg = EmailMultiAlternatives(
                 subject=subject,
@@ -154,7 +155,7 @@ class EmailActions:
             }
 
             subject_prefix = subject_prefixes.get(referral.status, '📋 Referral Status Update')
-            subject = f"{subject_prefix}: {referral.fullname} - {context['position']}"
+            subject = f"{subject_prefix}: Referral by {referring_employee.get_full_name()} for {context['position']}"
 
             # Create and send email
             msg = EmailMultiAlternatives(

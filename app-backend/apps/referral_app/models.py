@@ -74,7 +74,7 @@ class Referral(models.Model):
     class StatusChoices(models.TextChoices):
         received    = "received", _("Received")
         shortlisted = "shortlisted", _("Shortlisted")
-        onhold      = "onhold", _("On-hold")
+        on_hold      = "on_hold", _("On-hold")
         hired       = "hired", _("Hired")
         rejected    = "rejected", _("Rejected")
 
