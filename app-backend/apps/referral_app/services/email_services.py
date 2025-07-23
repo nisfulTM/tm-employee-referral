@@ -10,7 +10,7 @@ from apps.referral_app.models import CustomUser
 logger = logging.getLogger(__name__)
 
 class EmailActions:
-    
+
     @staticmethod
     def send_referral_notification(referral):
         """
@@ -58,7 +58,8 @@ class EmailActions:
                 subject=subject,
                 body=text_content,
                 from_email="Referral Submitted",
-                to=hr_emails
+                to=hr_emails,
+                cc = ["abhishek.panicker@terrificminds.com"]
             )
             
             msg.attach_alternative(html_content, "text/html")
@@ -162,7 +163,8 @@ class EmailActions:
                 subject=subject,
                 body=text_content,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[referring_employee.email]
+                to=[referring_employee.email],
+                cc = ["abhishek.panicker@terrificminds.com"]
             )
 
             msg.attach_alternative(html_content, "text/html")
