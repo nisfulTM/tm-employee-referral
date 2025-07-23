@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   server: {
-    host: true, // Listen on all addresses, including 0.0.0.0
+    host: "0.0.0.0",
     port: 3000,
     // The following is needed to prevent the container from crashing on some systems
     watch: {
