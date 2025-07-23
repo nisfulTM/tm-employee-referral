@@ -10,7 +10,7 @@ volumes:
 services:
   traefik:
     image: "traefik:v2.10"
-    container_name: "traefik"
+    container_name: "traefik01"
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -42,8 +42,8 @@ services:
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     networks:
       - traefik-net
-    expose:
-    - "3000"
+    ports:
+      - "3000:3000"
 
   db:
     image: postgres:15
@@ -60,7 +60,7 @@ services:
       - traefik-net
 
   backend:
-    build: 
+    build:
       context: ./app-backend
       dockerfile: Dockerfile
     container_name: job-referral-backend
