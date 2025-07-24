@@ -44,8 +44,8 @@ const ReferralTable = ({ referrals, onOpenModal }: ReferralTableProps) => (
 
             {/* ✅ Referrer */}
             <TableCell>
-              <p className="font-medium">Referred By</p>
-              <p className="text-xs text-muted-foreground">ID: {referral.referred_by}</p>
+              <p className="font-medium">{referral.referred_by_name}</p>
+              <p className="text-xs text-muted-foreground">{referral.referred_by_emp_code}</p>
             </TableCell>
 
             {/* ✅ Status */}

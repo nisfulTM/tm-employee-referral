@@ -60,6 +60,8 @@ export type TReferralItem = {
   status: string;
   created_at: string;
   referred_by: number;
+  referred_by_name : string,
+  referred_by_emp_code : string;
 };
 
 export type TReferralStatus =
