@@ -133,6 +133,7 @@ export default function ReferralDashboard() {
         department: data.department,
         role: data.role,
         resume: resumeBase64,
+        comments: data.comments || "",
       };
 
       submit(payload);
@@ -278,12 +279,12 @@ export default function ReferralDashboard() {
                       <FormItem>
                         <Label>Department <span className="text-red-500">*</span></Label>
                         <Select
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            if (!departments[value]?.length) {
-                              form.setValue("role", "");
-                            }
-                          }}
+                         onValueChange={(value: string) => {
+                         field.onChange(value);
+                         if (!departments[value]?.length) {
+                        form.setValue("role", "");
+                        }
+                        }}
                           defaultValue={field.value}
                         >
                           <FormControl>

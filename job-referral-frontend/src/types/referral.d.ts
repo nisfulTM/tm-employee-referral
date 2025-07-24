@@ -41,6 +41,7 @@ export type TSaveReferralPayload = {
   department: string;
   role: string;
   resume: string; // base64 encoded
+  comments?: string;
 };
 
 export type TSaveReferralResponse = {
@@ -60,6 +61,7 @@ export type TReferralItem = {
   status: string;
   created_at: string;
   referred_by: number;
+  comments?: string;
 };
 
 export type TReferralStatus =

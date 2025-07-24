@@ -63,7 +63,7 @@ export default function Login() {
           <img
             src="/images/logo.png"
             alt="Logo"
-            className="h-24 w-auto object-contain"
+            className="h-12 w-auto object-contain"
           />
         </div>
         <Form {...form}>
