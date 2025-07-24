@@ -189,9 +189,9 @@ SIMPLE_JWT = {
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = get_env_value("EMAIL_HOST", "smtp.gmail.com")
-EMAIL_HOST_USER = get_env_value("EMAIL_HOST_USER", "testmailadhd@gmail.com")
-EMAIL_HOST_PASSWORD = get_env_value("EMAIL_HOST_PASSWORD", "test")
-EMAIL_PORT = get_env_value("EMAIL_PORT", 587)
+EMAIL_HOST= 'smtp.gmail.com' 
+EMAIL_PORT= 587
+EMAIL_HOST_USER= 'suhail.ts@terrificminds.com'
+EMAIL_HOST_PASSWORD= 'dgpy pysr bvzk vuwz'
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = get_env_value("DEFAULT_FROM_EMAIL", "testmailadhd@gmail.com")
+DEFAULT_FROM_EMAIL= 'TM- Referral Website'
