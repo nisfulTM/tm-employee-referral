@@ -14,7 +14,7 @@ class HRActions:
     def referral_list(request):
         try:
             new_list = Referral.objects.filter(status='received').order_by("id")
-            active = Referral.objects.filter(status__in=['onhold','shortlisted']).order_by("id")
+            active = Referral.objects.filter(status__in=['on_hold','shortlisted']).order_by("id")
             history = Referral.objects.filter(status__in=['hired','rejected']).order_by("id")
             
             grouped_data = {
