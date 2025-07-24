@@ -8,7 +8,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Referral
-        fields = ['fullname', 'email','phone_number','linkedin_url','department','role','resume']
+        fields = ['fullname', 'email','phone_number','linkedin_url','department','role','resume','comments']
 
     def validate(self, attrs):
         return super().validate(attrs)
@@ -25,6 +25,7 @@ class ReferralSerializer(serializers.ModelSerializer):
         instance.department     = validated_data.get('department', None)
         instance.role           = validated_data.get('role', None)
         instance.linkedin_url   = validated_data.get('linkedin_url', None)
+        instance.comments   = validated_data.get('comments', None)
         instance.referred_by    = get_token_user_or_none(request)
         if resume:
             ext = resume.name.split('.')[-1]

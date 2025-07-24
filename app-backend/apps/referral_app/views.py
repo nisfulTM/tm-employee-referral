@@ -42,10 +42,11 @@ class Login(APIView):
             tokens = UserActions.get_tokens_for_user(user)
         
             dashboard_url = '/hr-dashboard/' if user.type == 'hr' else '/employee-dashboard/'
-                
+
+            user_data = UserSerializer(user).data
             return Response(
                 {
-                'user': UserSerializer(user).data,
+                'user': user_data,
                 'tokens': tokens,
                 'dashboard_url': dashboard_url,
                 'message': 'Login successful'
