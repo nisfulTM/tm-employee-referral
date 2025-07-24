@@ -67,7 +67,7 @@ services:
       context: ./app-backend
       dockerfile: Dockerfile
     container_name: job-referral-backend
-    command: /bin/sh -c "pip install -r requirements.txt && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: /bin/sh -c "pip install -r requirements.txt && python manage.py makemigrations && python manage.py migrate && python manage.py seed_users && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./app-backend:/app
     ports:
