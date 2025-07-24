@@ -67,6 +67,7 @@ class ReferralAdmin(admin.ModelAdmin):
         'phone_number',
         'linkedin_url',
         'department',
+        'comments',
         'role',
         'resume',
         'status',

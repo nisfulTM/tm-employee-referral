@@ -68,11 +68,12 @@ class UserLoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
+    employee_id = serializers.CharField(source='emp_code', read_only=True)
 
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name',
-                 'full_name', 'type', 'is_active', 'date_joined')
+                 'full_name', 'type', 'is_active', 'date_joined','employee_id')
         read_only_fields = ('id', 'date_joined')
 
     def get_full_name(self, obj):

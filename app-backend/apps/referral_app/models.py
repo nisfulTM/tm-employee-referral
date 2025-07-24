@@ -87,6 +87,7 @@ class Referral(models.Model):
     role          = models.CharField(_("Role"), max_length=300, blank=True, null=True)
     resume        = models.FileField(_("Resume"), upload_to='resumes/', blank=True, null=True)
     status        = models.CharField(_("Status"), max_length=300,choices=StatusChoices.choices,default=StatusChoices.received)
+    comments      = models.TextField(_("comments"), blank=True, null=True)
     created_at    = models.DateTimeField(_("Created At"), auto_now_add=True)
 
     def __str__(self):
