@@ -81,6 +81,13 @@ const UpdateStatusDialog = ({
       </a>
     </div>
     <div>
+     <Label>Referrer Comments</Label>
+      <p className="text-sm text-gray-700">
+        {referral.comments || "No comments provided"}
+      </p>
+    </div>
+
+    <div>
             <Label>Status</Label>
             <Select
               value={status}
