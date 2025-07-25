@@ -49,7 +49,7 @@ const ReferralTable = ({ referrals, onOpenModal }: ReferralTableProps) => (
             </TableCell>
 
             {/* ✅ Status */}
-            <TableCell>
+            <TableCell className="pointer-events-none">
               <Badge className={statusColors[referral.status as keyof typeof statusColors]}>
                 {statusLabels[referral.status as keyof typeof statusLabels]}
               </Badge>
@@ -60,6 +60,8 @@ const ReferralTable = ({ referrals, onOpenModal }: ReferralTableProps) => (
               <a
                 href={referral.resume}
                 download
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center text-blue-600 hover:underline"
               >
                 <Download className="w-4 h-4 mr-1" />
